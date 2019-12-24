@@ -1,33 +1,42 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 import {
-    View,
-    Text,
-    StyleSheet,
     PanResponder,
     Animated,
-    Dimensions,
 } from 'react-native'
 
-const Card = ({props, children}) => {
+interface CardProps {
+    swipeThreshold: number,
+    children: React.ReactNode
+}
 
-    const [pan, setPan] = useState(new Animated.ValueXY())
+const Card: React.FC<CardProps> = ({swipeThreshold, children}) => {
+    const [position, setPosition] = useState(new Animated.ValueXY())
+
+    const _resetPosition = () => {
+        Animated.spring(
+            position, // Auto-multiplexed
+            {toValue: {x: 0, y: 0}, friction: 3}, // Back to zero
+        ).start();
+    }
 
     // Init panResponder
     const initialPanResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
-        onPanResponderMove: Animated.event([
-            null,
-            {
-                dx: pan.x, // x,y are Animated.Value
-                dy: pan.y,
+        onPanResponderMove: Animated.event([null, {
+                dx: position.x,
+                dy: position.y,
             },
         ]),
-        onPanResponderRelease: () => {
-            Animated.spring(
-                pan, // Auto-multiplexed
-                {toValue: {x: 0, y: 0}}, // Back to zero
-            ).start();
+        onPanResponderRelease: (evt, gestureState) => {
+            if (gestureState.dx > swipeThreshold) {
+                console.log('swiped to the right')
+            } else if (gestureState.dx < -swipeThreshold) {
+                console.log('swiped to the left')
+            } else {
+                console.log('too weak')
+                _resetPosition()
+            }
         },
     });
 
@@ -37,13 +46,15 @@ const Card = ({props, children}) => {
     return (
         <Animated.View
             {...panResponder.panHandlers}
-            style={pan.getLayout()}>
+            style={position.getLayout()}>
             {children}
         </Animated.View>
     )
 }
 
-Card.propTypes = {}
+Card.propTypes = {
+    swipeThreshold: PropTypes.number.isRequired
+}
 
 Card.defaultProps = {}
 

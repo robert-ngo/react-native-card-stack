@@ -1,5 +1,4 @@
 import * as React from 'react'
-import PropTypes from 'prop-types'
 import {
     View,
     StyleSheet,
@@ -8,62 +7,62 @@ import {
 
 import Card from './Card'
 
-const CardStack = (props) => {
+const SCREEN_WIDTH = Dimensions.get('window').width
+
+interface CardStackProps {
+    data: any[],
+    renderItem: any,
+    height: number,
+    width: number,
+    padding: number,
+    layerOffset: number,
+    swipeThreshold: number
+}
+
+const CardStack: React.FC<CardStackProps> = (props) => {
     const {
         data,
         renderItem,
         height,
         width,
         padding,
-        layerOffset
+        layerOffset,
+        swipeThreshold
     } = props
-
 
     const SCALE_STEP = 0.05
     const cardStackStyle = {...styles.cardStack, height: height}
     const cardStyle = {
         ...styles.card,
         width: width - 2 * padding - layerOffset * data.length,
-        height: height - padding
+        height: height || 400 - padding
     }
 
     return (
         <View style={cardStackStyle}>
-            {data.reverse().map((item, index: number) => <Card key={index}>
-                <View style={{...cardStyle,
-                    transform: [
-                        { scaleX: 1 - (data.length - index) * SCALE_STEP },
-                        { scaleY: 1 - (data.length - index) * SCALE_STEP },
-                        { translateX: layerOffset * index }
-                    ]
-                }}>
-                    {renderItem(item)}
-                </View>
-            </Card>)}
+            {data.reverse().map((item, index: number) =>
+                <Card key={index} swipeThreshold={swipeThreshold}>
+                    <View style={{...cardStyle,
+                        transform: [
+                            { scaleX: 1 - (data.length - index) * SCALE_STEP },
+                            { scaleY: 1 - (data.length - index) * SCALE_STEP },
+                            { translateX: layerOffset * index }
+                        ]
+                    }}>
+                        {renderItem(item)}
+                    </View>
+                </Card>
+            )}
         </View>
     )
-}
-
-CardStack.propTypes = {
-    data: PropTypes.array.isRequired,
-    renderItem: PropTypes.func.isRequired,
-    layerOffset: PropTypes.number,
-
-    // the height of the wrapper, default value is 400
-    height: PropTypes.number,
-
-    // the width of the wrapper, default value is screen width
-    width: PropTypes.number,
-
-    // the padding between the wrapper and the cards element
-    padding: PropTypes.number,
 }
 
 CardStack.defaultProps = {
     layerOffset: 20,
     height: 400,
-    width: Dimensions.get('window').width,
-    padding: 15
+    width: SCREEN_WIDTH,
+    padding: 15,
+    swipeThreshold: SCREEN_WIDTH * 0.2
 }
 
 const styles = StyleSheet.create({

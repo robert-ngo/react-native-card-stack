@@ -62,7 +62,7 @@ CardStack.defaultProps = {
     height: 400,
     width: SCREEN_WIDTH,
     padding: 15,
-    swipeThreshold: SCREEN_WIDTH * 0.2
+    swipeThreshold: SCREEN_WIDTH * 0.25
 }
 
 const styles = StyleSheet.create({

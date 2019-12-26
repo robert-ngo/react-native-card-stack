@@ -34,19 +34,23 @@ const CardStack: React.FC<CardStackProps> = (props) => {
     const cardStackStyle = {...styles.cardStack, height: height}
     const cardStyle = {
         ...styles.card,
-        width: width - 2 * padding - layerOffset * data.length,
-        height: height || 400 - padding
+        width: width - 2 * padding - layerOffset * (data.length - 1),
+        height: height - 2 * padding,
+        top: padding,
+        left: padding
     }
 
     return (
         <View style={cardStackStyle}>
             {data.reverse().map((item, index: number) =>
+
                 <Card key={index} swipeThreshold={swipeThreshold}>
+                    {console.log('item', item, index, data.length - index - 1)}
                     <View style={{...cardStyle,
                         transform: [
-                            { scaleX: 1 - (data.length - index) * SCALE_STEP },
-                            { scaleY: 1 - (data.length - index) * SCALE_STEP },
-                            { translateX: layerOffset * index }
+                            //{ scaleX: 1 - (data.length - index - 1) * SCALE_STEP },
+                            { scaleY: 1 - (data.length - index - 1) * SCALE_STEP },
+                            { translateX: layerOffset * (data.length - index - 1) }
                         ]
                     }}>
                         {renderItem(item)}
@@ -58,7 +62,7 @@ const CardStack: React.FC<CardStackProps> = (props) => {
 }
 
 CardStack.defaultProps = {
-    layerOffset: 20,
+    layerOffset: 15,
     height: 400,
     width: SCREEN_WIDTH,
     padding: 15,

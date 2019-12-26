@@ -22,12 +22,12 @@ const App = () => {
   return (
     <SafeAreaView style={{ flex: 1}}>
         <CardStack data={data}
-           renderItem={(item) => (
-               <View style={{ backgroundColor: 'pink', display: 'flex', flexDirection: 'column', alignContent: 'center', justifyContent: 'center'}}>
-                   <Text style={{ fontSize: 28}}>{item.title}</Text>
-                   <Text style={{ fontSize: 15}}>{item.description}</Text>
-               </View>
-           )}
+                   renderItem={(item) => (
+                       <View style={{ backgroundColor: 'pink', display: 'flex', flexDirection: 'column', alignContent: 'center', justifyContent: 'center'}}>
+                           <Text style={{ fontSize: 28}}>{item.title}</Text>
+                           <Text style={{ fontSize: 15}}>{item.description}</Text>
+                       </View>
+                   )}
         />
     </SafeAreaView>
   );
